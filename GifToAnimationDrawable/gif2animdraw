@@ -1,0 +1,59 @@
+#!/usr/bin/ruby
+require 'fileutils'
+require 'RMagick'
+require 'slop'
+require 'builder'
+
+opts = Slop.new do
+  banner "gif2animdraw [options]\n"
+  on :i, :input=, 'path to animated GIF (or directory of GIFs)', :required => true
+  on :o, :outdir=, 'path to root output directory', :required => true
+  on :d, :density=, 'density name to use for frames', :required=>true
+  on :oneshot, 'if set, animation does not repeat', :required => false, :default=>false
+  help
+end
+
+begin
+  opts.parse
+rescue
+  puts opts.help
+  exit -1
+end
+
+if !['ldpi', 'mdpi', 'tvdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'].include?(opts[:d])
+  puts "Invalid density #{opts[:d]}"
+  exit -1
+end
+
+glob=File.directory?(opts[:i]) ? File.join(opts[:i], '*.gif') : opts[:i]
+
+Dir[glob].each do |gif|
+  input=Magick::ImageList.new(gif).coalesce
+  output=File.join(opts[:o], 'drawable')
+  output_density=File.join(opts[:o], 'drawable-'+opts[:d])
+  basename=File.basename(gif, '.gif').downcase.gsub(/\W/,'_')
+
+  FileUtils.mkdir_p output
+  FileUtils.mkdir_p output_density
+
+  Dir.glob(File.join(output_density, basename+'*.png')).each {|f| File.delete(f) }
+
+  input.write File.join(output_density, basename+'_%d.png')
+
+  builder = Builder::XmlMarkup.new(:indent=>2)
+
+  builder.tag!('animation-list',
+                'xmlns:android'=>'http://schemas.android.com/apk/res/android',
+                'android:oneshot'=>opts[:oneshot]) do
+    i=0
+    input.each do |frame|
+      builder.item('android:drawable'=>"@drawable/#{basename}_#{i}",
+                    'android:duration'=>frame.delay*1000/input.ticks_per_second)
+      i+=1
+    end
+  end
+
+  open(File.join(output, basename+'.xml'), 'w') do |f|
+    f.puts builder.target!
+  end
+end
