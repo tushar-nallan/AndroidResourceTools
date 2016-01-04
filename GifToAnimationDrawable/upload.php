@@ -29,10 +29,8 @@
     if($output!=="")error_log("1. ".$output);
     $output=shell_exec("mv $gifFilePath outputs/$gifUuid/$drawableName.gif");
     if($output!=="")error_log("2. ".$output);
-    $output=shell_exec("./gif2animdraw -i outputs/$gifUuid/$drawableName.gif -o outputs/$gifUuid -d $drawableDensity --oneshot");
+    $output=shell_exec("cd outputs/$gifUuid ; bash ../../gif2animdraw.sh $drawableName.gif $drawableDensity; cd ../../");
     if($output!=="")error_log("3. ".$output);
-    $output=shell_exec("cd outputs/$gifUuid ; zip -r $drawableName.zip drawable drawable-$drawableDensity ; cd ../..");
-    if($output!=="")error_log("4. ".$output);
     header('Location: outputs/'.$gifUuid.'/'.$drawableName.'.zip');
   }
   
