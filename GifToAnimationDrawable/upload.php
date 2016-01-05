@@ -21,24 +21,27 @@
                    mt_rand(0,0xffff),mt_rand(0,0xffff),mt_rand(0,0xffff));
   }
   
-  function generate_drawable($gifFilePath,$gifUuid,$drawableDensity,$drawableName)
+  function generate_drawable($gifFilePath,$gifUuid,$drawableDensity,$drawableName,$targetDensities)
   {
     if($drawableName=="")$drawableName="gifdrawable";
-    
+
+    $targetDensitiesString = implode(',', $targetDensities);
+
     $output=shell_exec("mkdir -p outputs/$gifUuid");
     if($output!=="")error_log("1. ".$output);
     $output=shell_exec("mv $gifFilePath outputs/$gifUuid/$drawableName.gif");
     if($output!=="")error_log("2. ".$output);
-    $output=shell_exec("cd outputs/$gifUuid ; bash ../../gif2animdraw.sh $drawableName.gif $drawableDensity; cd ../../");
+    $output=shell_exec("cd outputs/$gifUuid ; bash ../../gif2animdraw.sh $drawableName.gif $drawableDensity $targetDensitiesString; cd ../../");
     if($output!=="")error_log("3. ".$output);
     header('Location: outputs/'.$gifUuid.'/'.$drawableName.'.zip');
   }
-  
+
   $target_dir    ="uploads/";
   $targetuuid    =uuid();
   $target_file   =$target_dir.$targetuuid.".gif";
   $errorString   ="";
   $fileNameFromForm="fileToUpload";
+  $targetDensities=$_POST["_frm-iconform-targetDensity"];
   
   $drawableDensity=$_POST["_frm-iconform-sourceDensity"];
   $drawableName=$_POST["drawableName"];
@@ -65,7 +68,7 @@
   }
   
   if(move_uploaded_file($_FILES["$fileNameFromForm"]["tmp_name"],$target_file)){
-    generate_drawable($target_file,$targetuuid,$drawableDensity,$drawableName);
+    generate_drawable($target_file,$targetuuid,$drawableDensity,$drawableName,$targetDensities);
   }else{
     echo"An error occurred".$GO_HOME;
   }

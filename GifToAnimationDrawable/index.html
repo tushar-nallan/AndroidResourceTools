@@ -1,92 +1,111 @@
 <!DOCTYPE html>
 <html>
-    <!--
-        Copyright 2010 Google Inc.
-        
-        
-        
-        Licensed under the Apache License, Version 2.0 (the "License");
-        
-        you may not use this file except in compliance with the License.
-        
-        You may obtain a copy of the License at
-        
-        
-        
-        http://www.apache.org/licenses/LICENSE-2.0
-        
-        
-        
-        Unless required by applicable law or agreed to in writing, software
-        
-        distributed under the License is distributed on an "AS IS" BASIS,
-        
-        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-        
-        See the License for the specific language governing permissions and
-        
-        limitations under the License.
-        
-        -->
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <meta http-equiv="X-UA-Compatible" content="chrome=1">
-        <title>Android Resource Tools</title>
-        <link rel="stylesheet" href="lib/cssreset-3.4.1.min.css">
-        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:regular,medium,thin,italic,mediumitalic,bold" title="roboto">
-        <link rel="stylesheet" href="css/studio.css">
-        <script src="https://romannurik.github.io/AndroidAssetStudio/lib/jquery.min.js"></script>
-        <script src="https://romannurik.github.io/AndroidAssetStudio/js/asset-studio.pack.js"></script>
-    </head>
-    <body>
-        <div id="main-container">
-            <div id="page-header">
-                <h1>GIF to AnimationDrawable</h1>
-            </div>
-            <form action="upload.php" method="post" id="gifform" enctype="multipart/form-data">
-                <div id="inputs">
-                    <div id="inputs-form"></div>
-                    <a id="downloadButton" class="dragout form-button" >Convert and Download .zip</a>
+  <!--
+  Copyright 2010 Google Inc.
+  
+  
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  
+  you may not use this file except in compliance with the License.
+  
+  You may obtain a copy of the License at
+  
+  
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  
+  
+  Unless required by applicable law or agreed to in writing, software
+  
+  distributed under the License is distributed on an "AS IS" BASIS,
+  
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  
+  See the License for the specific language governing permissions and
+  
+  limitations under the License.
+  
+  -->
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Android Resource Tools</title>
+    <link rel="stylesheet" href="lib/cssreset-3.4.1.min.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:regular,medium,thin,italic,mediumitalic,bold" title="roboto">
+    <link rel="stylesheet" href="css/studio.css">
+    <script src="https://romannurik.github.io/AndroidAssetStudio/lib/jquery.min.js"></script>
+    <script src="https://romannurik.github.io/AndroidAssetStudio/js/asset-studio.pack.js"></script>
+  </head>
+  <body>
+    <div id="main-container">
+      <div id="page-header">
+        <h1>GIF to AnimationDrawable</h1>
+      </div>
+      <form action="upload.php" method="post" id="gifform" enctype="multipart/form-data">
+        <div id="inputs">
+          <div id="inputs-form">
+            
+          </div>
+          <div class="form-field-outer" id="target-density-block">
+              <label for="_frm-iconform-targetDensity">Target Density</label>
+              <div class="form-field-help-text" style="display: none;">
+                <label for="_frm-iconform-targetDensity"></label>
+              </div>
+              <div class="form-field-container">
+                <div class="form-field-buttonset" id="_frm-iconform-targetDensity">
+                  <input id="_frm-iconform-targetDensity-mdpi" name="_frm-iconform-targetDensity[]" style="display:none" type="checkbox" value="mdpi"><label for="_frm-iconform-targetDensity-mdpi">mdpi<br>
+                  <small>(160)</small></label><input checked="checked" id="_frm-iconform-targetDensity-hdpi" name="_frm-iconform-targetDensity[]" style="display:none" type="checkbox" value="hdpi"><label for="_frm-iconform-targetDensity-hdpi">hdpi<br>
+                  <small>(240)</small></label><input id="_frm-iconform-targetDensity-xhdpi" name="_frm-iconform-targetDensity[]" style="display:none" type="checkbox" value="xhdpi"><label for="_frm-iconform-targetDensity-xhdpi">xhdpi<br>
+                  <small>(320)</small></label><input id="_frm-iconform-targetDensity-xxhdpi" name="_frm-iconform-targetDensity[]" style="display:none" type="checkbox" value="xxhdpi"><label for="_frm-iconform-targetDensity-xxhdpi">xxhdpi<br>
+                  <small>(480)</small></label><input id="_frm-iconform-targetDensity-xxxhdpi" name="_frm-iconform-targetDensity[]" style="display:none" type="checkbox" value="xxxhdpi"><label for="_frm-iconform-targetDensity-xxxhdpi">xxxhdpi<br>
+                  <small>(640)</small></label>
                 </div>
-            </form>
-            <div id="footer">
-                <p>See the <a href="https://github.com/tushar-acharya/AndroidResourceTools/tree/master/GifToAnimationDrawable">source on GitHub</a>.</p>
+              </div>
             </div>
+          <a id="downloadButton" class="dragout form-button" >Convert and Download .zip</a>
         </div>
-        <script>
-            $(studio.checkBrowser);
-            
-            
-            
-            // Input form code
-            
-            var SOURCE_DENSITY_OPTIONS = [
-            
-            { id: 'mdpi', title: 'mdpi<br><small>(160)</small>' },
-            
-            { id: 'hdpi', title: 'hdpi<br><small>(240)</small>' },
-            
-            { id: 'xhdpi', title: 'xhdpi<br><small>(320)</small>' },
-            
-            { id: 'xxhdpi', title: 'xxhdpi<br><small>(480)</small>' },
-            
-            { id: 'xxxhdpi', title: 'xxxhdpi<br><small>(640)</small>' }
-            
-            ];
-            
-            
-            
-            var nameField;
-            
-            var form = new studio.forms.Form('iconform', {
-            
-            onChange: function(field) {
-            
-            var values = form.getValues();
-            
-            if ((!field || field.id_ == 'source')
-            
-            && values['source'] && values['source'].name) {
+      </form>
+      <h4 style="color:red;margin-left:25px;display:none" id="warning_size">NOTE: GIFs with frames > 50 or size > 200 kB may take some time to conver</h4><br />
+      <div id="footer">
+        <p>See the <a href="https://github.com/tushar-acharya/AndroidResourceTools/tree/master/GifToAnimationDrawable">source on GitHub</a>.</p>
+      </div>
+    </div>
+    <script>
+      $(studio.checkBrowser);
+      
+      
+      
+      // Input form code
+      
+      var SOURCE_DENSITY_OPTIONS = [
+        
+        { id: 'mdpi', title: 'mdpi<br><small>(160)</small>' },
+        
+        { id: 'hdpi', title: 'hdpi<br><small>(240)</small>' },
+        
+        { id: 'xhdpi', title: 'xhdpi<br><small>(320)</small>' },
+        
+        { id: 'xxhdpi', title: 'xxhdpi<br><small>(480)</small>' },
+        
+        { id: 'xxxhdpi', title: 'xxxhdpi<br><small>(640)</small>' }
+        
+      ];
+      
+      
+      
+      var nameField;
+      
+      var form = new studio.forms.Form('iconform', {
+        
+        onChange: function(field) {
+          
+          var values = form.getValues();
+          
+          if ((!field || field.id_ == 'source')
+              
+              && values['source'] && values['source'].name) {
             
             var name = values['source'].name.split('.')[0];
             
@@ -95,18 +114,18 @@
             name = 'anim_' + studio.util.sanitizeResourceName(name);
             
             if (name != nameField.getValue()) {
-            
-            nameField.setValue(name);
-            
+              
+              nameField.setValue(name);
+              
             }
             
-            }
-            
-            },
-            
-            fields: [
-            
-            new studio.forms.ImageField('source', {
+          }
+          
+        },
+        
+        fields: [
+          
+          new studio.forms.ImageField('source', {
             
             title: 'Image GIF',
             
@@ -116,11 +135,19 @@
             
             noPreview: true
             
-            }),
+          }),
+          
+          (nameField = new studio.forms.TextField('name', {
             
-            new studio.forms.EnumField('sourceDensity', {
+            title: 'Drawable Name',
             
-            title: 'Density',
+            helpText: 'Name of the generated drawables',
+            
+          })) ,
+          
+          new studio.forms.EnumField('sourceDensity', {
+            
+            title: 'Source Density',
             
             buttons: true,
             
@@ -128,42 +155,38 @@
             
             defaultValue: 'hdpi'
             
-            }),
-            
-            (nameField = new studio.forms.TextField('name', {
-            
-            title: 'Drawable Name',
-            
-            helpText: 'Name of the generated drawables',
-            
-            }))
-            
-            ]
-            
-            });
-            
-            form.createUI($('#inputs-form').get(0));
-            
-            $("#_frm-iconform-source .form-image-hidden-file-field").get(0).name="fileToUpload";
-            
-            $("#_frm-iconform-source .form-image-hidden-file-field").get(0).accept = "image/gif";
-            
-            $(".form-text")[0].name="drawableName";
-            
-            $("#downloadButton").live('click', function() {
-            
-            if($("#_frm-iconform-source-image").get(0).checked) {
-            
-            document.getElementById('gifform').submit();
-            
-            } else {
-            
-            alert("Please select a GIF");
-            
-            }
-            
-            });
-            
-        </script>
-    </body>
+          })
+          
+        ]
+        
+      });
+      
+      form.createUI($('#inputs-form').get(0));
+      
+      $("#_frm-iconform-source .form-image-hidden-file-field").get(0).name="fileToUpload";
+      
+      $("#_frm-iconform-source .form-image-hidden-file-field").get(0).accept = "image/gif";
+      
+      $(".form-text")[0].name="drawableName";
+      
+      //      $('input[type=radio][name=_frm-iconform-sourceDensity]').change(function() {
+      //  $('input[type=checkbox][value='+this.value+']').get(0).checked='checked';
+      //});
+
+      $("#downloadButton").live('click', function() {
+        
+        if($('input[name="_frm-iconform-targetDensity[]"]:checked').length == 0){
+          alert("Please select atleast one target density");
+          return;
+        }
+        if(!$("#_frm-iconform-source-image").get(0).checked) {
+          alert("Please select a GIF");
+          return;
+        } 
+        $("#warning_size").show();
+        document.getElementById('gifform').submit();
+      });
+      
+    </script>
+  </body>
 </html>

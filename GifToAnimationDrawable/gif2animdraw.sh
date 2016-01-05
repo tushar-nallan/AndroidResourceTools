@@ -2,6 +2,18 @@ gif=$1;
 filename="${gif%.*}";
 echo "Filename is $filename"
 density=$2;
+targetDensities=$3;
+
+function getScaleForDensity() {
+  case "$1" in
+    ("ldpi") echo 0.75 ;;
+    ("mdpi") echo 1 ;;
+    ("hdpi") echo 1.5 ;;
+    ("xhdpi") echo 2 ;;
+    ("xxhdpi") echo 3 ;;
+    ("xxxhdpi") echo 4 ;;
+  esac
+}
 
 declare -a allowed_densities=("ldpi" "mdpi" "hdpi" "xhdpi" "xxhdpi" "xxxhdpi")
 valid_density=false;
@@ -51,6 +63,27 @@ echo -e '</animation-list>' >> $filename.xml;
 
 cd ..
 
+refdens=$(getScaleForDensity $density)
+
+echo reference density is $refdens
+
+for i in $(echo $targetDensities | sed "s/,/ /g")
+do
+    if [ $i == $density ]; then
+        continue;
+    fi
+    mkdir drawable-$i; cd drawable-$i;
+    curdens=$(getScaleForDensity $i)
+    echo current density is $curdens
+    rp=`echo $curdens $refdens | awk '{printf "%.2f", $1/$2}'`
+    rp=`echo $rp 100 | awk '{printf "%d", $1*$2}'`
+    echo rp is $rp in float n is $n;
+    for (( j=0; j<n; j++ )); do
+        convert ../drawable-$density/$filename\_$j.png -resize $rp\% $filename\_$j.png;
+    done
+    cd ..
+done
+
 zip -r $filename.zip *
 
-rm -rf drawable drawable-$density $gif;
+rm -rf drawable*  $gif;
